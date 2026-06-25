@@ -1,0 +1,14 @@
+const mongoose = require("mongoose");
+
+const teamSchema = new mongoose.Schema({
+  teamName: {
+    type: String,
+    required: true,
+  },
+  hackathon: {
+    type: String,
+    required: true,
+  },
+});
+
+module.exports = mongoose.model("Team", teamSchema);
