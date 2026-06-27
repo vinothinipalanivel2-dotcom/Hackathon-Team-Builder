@@ -15,7 +15,7 @@ function App() {
 
   const fetchTeams = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/teams");
+      const res = await axios.get("https://hackathon-team-builder.onrender.com/teams");
       setTeams(Array.isArray(res.data) ? res.data : [res.data]);
     } catch (error) {
       console.log(error);
@@ -29,7 +29,7 @@ function App() {
     }
 
     try {
-      await axios.post("http://localhost:5000/teams", {
+      await axios.post("https://hackathon-team-builder.onrender.com/teams", {
         teamName,
         hackathon,
         skills,
@@ -56,7 +56,7 @@ function App() {
 
   const deleteTeam = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/teams/${id}`);
+      await axios.delete(`https://hackathon-team-builder.onrender.com/teams/${id}`);
       fetchTeams();
     } catch (error) {
       console.log(error);
