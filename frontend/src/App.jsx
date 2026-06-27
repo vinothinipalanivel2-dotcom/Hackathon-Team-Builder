@@ -6,7 +6,7 @@ function App() {
   const [teams, setTeams] = useState([]);
   const [teamName, setTeamName] = useState("");
   const [hackathon, setHackathon] = useState("");
-  const [skills, setSkills] = useState("");
+  const [skills, setSkills] = useState([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
@@ -15,29 +15,45 @@ function App() {
 
   const fetchTeams = async () => {
     try {
-      const res = await axios.get("https://hackathon-team-builder.onrender.com/teams");
+      const res = await axios.get(
+        "https://hackathon-team-builder.onrender.com/teams"
+      );
       setTeams(Array.isArray(res.data) ? res.data : [res.data]);
     } catch (error) {
       console.log(error);
     }
   };
 
+  // Handle checkbox selection
+  const handleSkillChange = (e) => {
+    const { value, checked } = e.target;
+
+    if (checked) {
+      setSkills([...skills, value]);
+    } else {
+      setSkills(skills.filter((skill) => skill !== value));
+    }
+  };
+
   const addTeam = async () => {
-    if (!teamName || !hackathon || !skills) {
+    if (!teamName || !hackathon || skills.length === 0) {
       alert("Please fill all fields");
       return;
     }
 
     try {
-      await axios.post("https://hackathon-team-builder.onrender.com/teams", {
-        teamName,
-        hackathon,
-        skills,
-      });
+      await axios.post(
+        "https://hackathon-team-builder.onrender.com/teams",
+        {
+          teamName,
+          hackathon,
+          skills: skills.join(", "),
+        }
+      );
 
       setTeamName("");
       setHackathon("");
-      setSkills("");
+      setSkills([]);
 
       fetchTeams();
     } catch (error) {
@@ -56,7 +72,9 @@ function App() {
 
   const deleteTeam = async (id) => {
     try {
-      await axios.delete(`https://hackathon-team-builder.onrender.com/teams/${id}`);
+      await axios.delete(
+        `https://hackathon-team-builder.onrender.com/teams/${id}`
+      );
       fetchTeams();
     } catch (error) {
       console.log(error);
@@ -65,12 +83,8 @@ function App() {
 
   const filteredTeams = teams.filter(
     (team) =>
-      team.teamName
-        ?.toLowerCase()
-        .includes(search.toLowerCase()) ||
-      team.hackathon
-        ?.toLowerCase()
-        .includes(search.toLowerCase())
+      team.teamName?.toLowerCase().includes(search.toLowerCase()) ||
+      team.hackathon?.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -91,12 +105,69 @@ function App() {
         onChange={(e) => setHackathon(e.target.value)}
       />
 
-      <input
-        type="text"
-        placeholder="Enter Skills (React, Python, AI)"
-        value={skills}
-        onChange={(e) => setSkills(e.target.value)}
-      />
+      <h3>Select Required Skills</h3>
+
+      <div className="skills-container">
+        <label>
+          <input
+            type="checkbox"
+            value="React"
+            checked={skills.includes("React")}
+            onChange={handleSkillChange}
+          />
+          React
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            value="Python"
+            checked={skills.includes("Python")}
+            onChange={handleSkillChange}
+          />
+          Python
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            value="AI"
+            checked={skills.includes("AI")}
+            onChange={handleSkillChange}
+          />
+          AI
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            value="Java"
+            checked={skills.includes("Java")}
+            onChange={handleSkillChange}
+          />
+          Java
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            value="Node.js"
+            checked={skills.includes("Node.js")}
+            onChange={handleSkillChange}
+          />
+          Node.js
+        </label>
+
+        <label>
+          <input
+            type="checkbox"
+            value="MongoDB"
+            checked={skills.includes("MongoDB")}
+            onChange={handleSkillChange}
+          />
+          MongoDB
+        </label>
+      </div>
 
       <button className="create-btn" onClick={addTeam}>
         Create Team
