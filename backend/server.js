@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 
@@ -20,7 +21,7 @@ let teams = [
 
 // Home Route
 app.get("/", (req, res) => {
-  res.send("Hackathon Team Builder Backend Running");
+  res.send("🚀 Hackathon Team Builder Backend Running");
 });
 
 // GET All Teams
@@ -34,14 +35,14 @@ app.post("/teams", (req, res) => {
     id: teams.length + 1,
     teamName: req.body.teamName,
     hackathon: req.body.hackathon,
-    skills: req.body.skills,
+    skills: req.body.skills || "",
     members: 1,
     maxMembers: 4,
   };
 
   teams.push(newTeam);
 
-  res.json({
+  res.status(201).json({
     message: "Team Created Successfully",
     team: newTeam,
   });
@@ -59,9 +60,8 @@ app.delete("/teams/:id", (req, res) => {
 });
 
 // Start Server
-// Start Server
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
 });
